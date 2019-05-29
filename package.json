@@ -1,11 +1,13 @@
 {
   "name": "nma",
   "displayName": "nma",
+  "license": "MIT",
   "description": "测试尼玛啊",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.34.0"
   },
+  "publisher": "allen3039",
   "categories": [
     "Other"
   ],
