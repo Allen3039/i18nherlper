@@ -1,9 +1,9 @@
 {
-  "name": "nma",
-  "displayName": "nma",
+  "name": "i18n-helper",
+  "displayName": "i18n-helper",
   "license": "MIT",
-  "description": "测试尼玛啊",
-  "version": "0.0.1",
+  "description": "国际化文案助手",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.34.0"
   },

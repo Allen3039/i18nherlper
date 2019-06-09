@@ -1,6 +1,10 @@
-# nma README
+# i18n-helper README
 
-This is the README for ur extension "nma". After writing up a brief description, we recommend including the following sections.
+问题 1:编码时国际化的 key 不能让人第一时间反应出对应的具体文案，增加代码的阅读成本和调试成本。
+解决方案:提供`onCommand:i18n`快速查找对应的国际化文案。
+
+问题 2:当使用页面上一些文字作为锚点去定位代码具体位置不方便，因为代码中全是具体的 key 了。
+解决方案:您可以使用`onCommand:i18n.search`快速对匹配出的 key 进行查寻定位。
 
 ## Features
 
@@ -19,17 +23,28 @@ If you have any requirements or dependencies, add a section describing those and
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+目前仅支持文件格式为:
+
+```ts
+type T18n = {
+  [keyName: string]: {
+    "en-US": string;
+    "hi-IN": string;
+    "ja-JP": string;
+    "zh-CN": string;
+  };
+};
+```
 
 ## Release Notes
 
 Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### 0.0.1
 
 Initial release of ...
 
-### 1.1.0
+### 0.1.0
 
 1 文件发生变更时，自动更新当前引用的国际化文件
 2 支持国际化文案反查
