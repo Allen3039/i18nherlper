@@ -3,7 +3,13 @@
 import * as vscode from "vscode";
 import { fstat } from "fs";
 import { resolve } from "url";
-
+import * as cp from "child_process";
+import {
+  loadFile,
+  findMatchedKeys,
+  getLocalPath,
+  findMatched18n,
+} from "./util";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -41,51 +47,49 @@ export function activate(context: vscode.ExtensionContext) {
     const selection = editor.selection;
     const key = document.getText(selection);
 
-    const config = vscode.workspace.getConfiguration("18n");
-    const filePath = resolve(
-      (vscode.workspace.rootPath as string) + "/" + vscode.workspace.name,
-      config["localePath"],
-    );
-
-    const file = require(filePath);
-
-    console.log(Object.keys(file));
+    const localePath = getLocalPath();
+    const file = loadFile(localePath);
     const matchedConfig = findMatched18n(file, key);
-    // const file=require(
+
     if (!matchedConfig) {
       vscode.window.showInformationMessage("没有匹配的key");
     } else {
+      vscode.window.showInformationMessage(
+        JSON.stringify(matchedConfig, null, "\t"),
+      );
     }
-    vscode.window.showInformationMessage(
-      JSON.stringify(matchedConfig, null, "\t"),
-    );
   });
 
+  const i18nSearch = vscode.commands.registerCommand("i18n.search", () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      return;
+    }
+    const configFile = loadFile(getLocalPath());
+    vscode.window
+      .showInputBox({
+        placeHolder: "国际化文案",
+      })
+      .then(i18nText => {
+        if (typeof i18nText === "string") {
+          const keys = findMatchedKeys(configFile, i18nText);
+          vscode.window.showQuickPick(keys, {}).then(pickedKey => {
+            console.log(pickedKey);
+
+            vscode.env.clipboard.writeText(pickedKey as string).then(() => {
+              vscode.window.showInformationMessage(
+                "当前选中的key已复制到剪贴板",
+              );
+            });
+          });
+        }
+      });
+  });
+  // TODO:dsds
   context.subscriptions.push(disposable);
   context.subscriptions.push(nima);
   context.subscriptions.push(i18nHelper);
 }
 
-interface I18nObj {
-  "en-US": string;
-  "hi-IN": string;
-  "ja-JP": string;
-  "zh-CN": string;
-}
-
-type T18n = {
-  [keyName: string]: {
-    "en-US": string;
-    "hi-IN": string;
-    "ja-JP": string;
-    "zh-CN": string;
-  };
-};
-const findMatched18n = (i1n8Config: T18n, key: string) => {
-  if (typeof i1n8Config[key] !== undefined) {
-    return i1n8Config[key] as I18nObj;
-  }
-  return null;
-};
 // this method is called when your extension is deactivated
 export function deactivate() {}

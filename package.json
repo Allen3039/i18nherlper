@@ -14,7 +14,8 @@
   "activationEvents": [
     "onCommand:extension.helloWorld",
     "onCommand:nima",
-    "onCommand:i18n"
+    "onCommand:i18n",
+    "onCommand:i18n.search"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -30,6 +31,10 @@
       {
         "command": "i18n",
         "title": "i18n"
+      },
+      {
+        "command": "i18n.search",
+        "title": "i18n.search"
       }
     ],
     "configuration": {
