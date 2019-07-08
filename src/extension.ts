@@ -8,8 +8,10 @@ import {
   loadFile,
   findMatchedKeys,
   getLocalPath,
-  findMatched18n,
+  findMatched18n
 } from "./util";
+import * as _ from "lodash";
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -27,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       // Display a message box to the user
       vscode.window.showInformationMessage("Hello World1111!");
-    },
+    }
   );
   let nima = vscode.commands.registerCommand("nima", () => {
     vscode.window.showInputBox({}).then(value => {
@@ -49,13 +51,21 @@ export function activate(context: vscode.ExtensionContext) {
 
     const localePath = getLocalPath();
     const file = loadFile(localePath);
+    if (file === null) {
+      return;
+    }
     const matchedConfig = findMatched18n(file, key);
 
     if (!matchedConfig) {
       vscode.window.showInformationMessage("没有匹配的key");
     } else {
+      const mainMatchedConfig = _.pick(matchedConfig, [
+        "zh-CN",
+        "en-US",
+        "ja-JP"
+      ]);
       vscode.window.showInformationMessage(
-        JSON.stringify(matchedConfig, null, "\t"),
+        JSON.stringify(mainMatchedConfig, null, "\n\t")
       );
     }
   });
@@ -66,24 +76,37 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
     const configFile = loadFile(getLocalPath());
-    vscode.window
-      .showInputBox({
-        placeHolder: "国际化文案",
-      })
-      .then(i18nText => {
-        if (typeof i18nText === "string") {
-          const keys = findMatchedKeys(configFile, i18nText);
-          vscode.window.showQuickPick(keys, {}).then(pickedKey => {
-            console.log(pickedKey);
+    if (configFile === null) {
+      return;
+    }
+    console.log({ configFile });
+    const showSearchWindow = () => {
+      vscode.window
+        .showInputBox({
+          placeHolder: "国际化文案"
+        })
+        .then(i18nText => {
+          if (typeof i18nText === "string") {
+            const keys = findMatchedKeys(configFile, i18nText);
+            // 不存在搜索的key 重新检索
+            if (!keys.length) {
+              showSearchWindow();
+              return;
+            }
+            vscode.window.showQuickPick(keys, {}).then(pickedKey => {
+              console.log(pickedKey);
 
-            vscode.env.clipboard.writeText(pickedKey as string).then(() => {
-              vscode.window.showInformationMessage(
-                "当前选中的key已复制到剪贴板",
-              );
+              vscode.env.clipboard.writeText(pickedKey as string).then(() => {
+                vscode.window.showInformationMessage(
+                  "当前选中的key已复制到剪贴板"
+                );
+              });
             });
-          });
-        }
-      });
+          }
+        });
+    };
+
+    showSearchWindow();
   });
   // TODO:dsds
   context.subscriptions.push(disposable);

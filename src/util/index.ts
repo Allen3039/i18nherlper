@@ -27,7 +27,7 @@ export const getLocalPath = () => {
 const getAbsolutePath = (relativePath: string) => {
   const filePath = resolve(
     (vscode.workspace.rootPath as string) + "/" + vscode.workspace.name,
-    relativePath,
+    relativePath
   );
   return filePath;
 };
@@ -36,7 +36,12 @@ export const loadFile = (relativePath: string) => {
   const filePath = getAbsolutePath(relativePath);
   console.log(filePath);
   watchOneTime(relativePath);
-  return require(filePath);
+  try {
+    return require(filePath);
+  } catch (error) {
+    vscode.window.showErrorMessage("请填写正确的国际化文件地址");
+    return null;
+  }
 };
 
 const disableCache = (relativePath: string) => {
@@ -76,7 +81,7 @@ export const findMatchedKeys = (i1n8Config: T18n, text: string) => {
       }
       return choosedKeys;
     },
-    [],
+    []
   );
   console.timeEnd(timeLabel);
   return keys;
