@@ -22,6 +22,7 @@ If you have any requirements or dependencies, add a section describing those and
 ## Extension Settings
 
 - `18n.localePath`: 国际化匹配文件地址
+- `18n.showHoverTip`: 是否 hover 显示翻译
 
 ## Known Issues
 
@@ -56,3 +57,7 @@ Initial release of ...
 - 查询国际化文案不存在匹配 key 时，引导重新查询国际化文案
 - 检测到翻译文件不存在时，给出提示
 - 优化查询到的翻译文案显示，目前只按顺序显示中、英、日三种翻译
+
+### 0.3.0
+
+- 添加国际化 key hover 提示中英文翻译

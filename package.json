@@ -6,7 +6,7 @@
   "repository": {
     "url": "https://github.com/Allen3039/i18nherlper.git"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.34.0"
   },
@@ -15,7 +15,10 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.helloWorld",
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
     "onCommand:nima",
     "onCommand:i18n",
     "onCommand:i18n.search"
@@ -48,6 +51,12 @@
           "description": "本地翻译的字典文件地址",
           "default": "./xx.js",
           "scope": "resource"
+        },
+        "18n.showHoverTip": {
+          "type": "boolean",
+          "description": "是否hover显示key国际化翻译",
+          "default": false,
+          "scope": "resource"
         }
       }
     },
@@ -61,6 +70,8 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
+    "package": "vsce package",
+    "publish ": "vsce publish",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",

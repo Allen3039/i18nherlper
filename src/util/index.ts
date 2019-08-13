@@ -23,6 +23,9 @@ export const getLocalPath = () => {
   const localePath = config["localePath"];
   return localePath;
 };
+export const showHoverTip = () => {
+  return vscode.workspace.getConfiguration("18n")["showHoverTip"];
+};
 
 const getAbsolutePath = (relativePath: string) => {
   const filePath = resolve(

@@ -8,7 +8,8 @@ import {
   loadFile,
   findMatchedKeys,
   getLocalPath,
-  findMatched18n
+  findMatched18n,
+  showHoverTip
 } from "./util";
 import * as _ from "lodash";
 
@@ -108,11 +109,40 @@ export function activate(context: vscode.ExtensionContext) {
 
     showSearchWindow();
   });
-  // TODO:dsds
-  context.subscriptions.push(disposable);
-  context.subscriptions.push(nima);
+
+  const i18nHoverTip = vscode.languages.registerHoverProvider("*", {
+    provideHover(doc, pos, token) {
+      if (!showHoverTip()) {
+        return;
+      }
+      const word = doc.getText(doc.getWordRangeAtPosition(pos));
+      console.log("TCL: provideHover -> word", word);
+      if (word) {
+        const localePath = getLocalPath();
+        const file = loadFile(localePath);
+        if (file === null) {
+          return;
+        }
+        const matchedConfig = findMatched18n(file, word);
+        if (!matchedConfig) {
+          return;
+        }
+        const mainMatchedConfig = _.pick(matchedConfig, [
+          "zh-CN",
+          "en-US",
+          "ja-JP"
+        ]);
+        return new vscode.Hover(JSON.stringify(mainMatchedConfig));
+      }
+    }
+  });
+
+  context.subscriptions.push(i18nSearch);
   context.subscriptions.push(i18nHelper);
+  context.subscriptions.push(i18nHoverTip);
 }
+
+// vscode.languages.registerHoverProvider('aa',)
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
