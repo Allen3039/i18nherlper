@@ -37,12 +37,10 @@ const getAbsolutePath = (relativePath: string) => {
 
 export const loadFile = (relativePath: string) => {
   const filePath = getAbsolutePath(relativePath);
-  console.log(filePath);
   watchOneTime(relativePath);
   try {
     return require(filePath);
   } catch (error) {
-    vscode.window.showErrorMessage("请填写正确的国际化文件地址");
     return null;
   }
 };

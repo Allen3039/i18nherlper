@@ -61,3 +61,7 @@ Initial release of ...
 ### 0.3.0
 
 - 添加国际化 key hover 提示中英文翻译
+
+### 0.4.0
+
+- 去除 hover 查找文案时，翻译文件不存在提示（i.e. 只会在通过命令 _onCommand:i18n_ 查找文案不存在时出现）

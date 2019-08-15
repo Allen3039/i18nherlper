@@ -53,6 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
     const localePath = getLocalPath();
     const file = loadFile(localePath);
     if (file === null) {
+      vscode.window.showErrorMessage("请填写正确的国际化文件地址");
       return;
     }
     const matchedConfig = findMatched18n(file, key);
